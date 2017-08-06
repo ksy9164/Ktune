@@ -45,20 +45,13 @@ void init(struct network *net)
 	
 	net->cost_rate = 0;
 
-	net->num_layer = NUM_LAYER;
-	net->layer_size = (int *)layersize;
-
-	net->learning_rate = LEARNING_RATE;	
-	net->mini_batch_size = MINI_BATCH_SIZE;
-	net->epoch = EPOCH;
-
 	net->ac_weight = (int *) malloc(sizeof(double) * net->num_layer);
 	net->ac_neuron = (int *) malloc(sizeof(double) * net->num_layer);
 
 	net->thread = (int *)malloc(sizeof(int) * THREAD_MODE_NUM);
 	net->mode = (int *)malloc(sizeof(int)*MODE_NUM);
 
-	net->record_random = (int *)malloc(sizeof(int) * MINI_BATCH_SIZE);
+	net->record_random = (int *)malloc(sizeof(int) * net->mini_batch_size);
 	
 	net->train_q_name = TRAIN_Q;
 	net->train_a_name = TRAIN_A;
@@ -100,7 +93,6 @@ void init(struct network *net)
         net->bias[i] = randn();
 	}
 }
-#if 0
 void train(struct network *net)
 {
 
@@ -163,8 +155,9 @@ void feedforward(struct network *net)
 	// feedforward
 	START_TIME(t_feedforward);
     sum = 0.0;
-if(net->mode[0])
-{	
+#if 1
+//if(net->mode[0])
+//{	
 	for (i = 0; i < net->num_layer-1; i++)
 	{               
 		#pragma omp parallel for num_threads(net->thread[0]) private(j, k, l) reduction(+:sum) collapse(2)
@@ -182,7 +175,8 @@ if(net->mode[0])
 			}
 		}
 	}
-}
+//}
+#else
 else
 {  
 	double *tmp, *tmp_bias;
@@ -200,6 +194,7 @@ else
 			}
 	}
 }
+#endif
 	END_TIME(t_feedforward);
 }
 
@@ -212,9 +207,10 @@ void back_pass(struct network *net)
 
 	START_TIME(t_back_pass);
 
-if(net->mode[1])
-{
+//if(net->mode[1])
+//{
 // calculate delta
+#if 1
 	#pragma omp parallel for num_threads(net->thread[1]) private(i, j) collapse(2)
 	for (i = 0; i < net->mini_batch_size; i++) {
 		for (j = 0; j < net->layer_size[net->num_layer-1]; j++) {
@@ -239,7 +235,8 @@ if(net->mode[1])
 			}
 		}
 	}
-}
+//}
+#else
 else
 {
 	double * temp1;//neuron - error
@@ -283,6 +280,7 @@ else
         }
     }
 }
+#endif
 	END_TIME(t_back_pass);
 }
 
@@ -311,9 +309,9 @@ void backpropagation(struct network *net)
 		}
 	}
 //update weight
-
-if(net->mode[2])
-{	
+#if 1
+//if(net->mode[2])
+//{	
 	// update weight
 	for (i = 0; i < net->num_layer-1; i++) {
 #pragma omp parallel for num_threads(net->thread[4]) private(j, k, l) collapse(2)
@@ -329,7 +327,8 @@ sum = 0;
 			}
 		}
 	}
-}
+//}
+#else
 // update weight
 else
 {
@@ -338,7 +337,7 @@ else
 		cblas_dgemm(CblasRowMajor, CblasTrans, CblasNoTrans,net->layer_size[i], net->layer_size[i+1],net->mini_batch_size, -(eta/mini), (const double *)&NEURON(net, i, 0, 0),net->layer_size[i], (const double *)&ERROR(net, i+1, 0, 0), net->layer_size[i+1], 1.0,&WEIGHT(net, i, 0, 0), net->layer_size[i+1]);
 	}
 }
-
+#endif
 	END_TIME(t_backpropagation);
 }
 
@@ -413,8 +412,8 @@ void cost_report(struct network * net )
 
 void report(struct network *net)
 {
-    int *thread = (int *)net-> thread;
-	int *mode = (int *)net->mode;
+//    int *thread = (int *)net-> thread;
+//	int *mode = (int *)net->mode;
 
     timeutils *t_feedforward = &net->t_feedforward;
     timeutils *t_back_pass = &net->t_back_pass;
@@ -424,7 +423,7 @@ void report(struct network *net)
 
     TIMER_INIT(total);
 
-	char *modeid[2] = {"MKL","OpenMP"};
+//	char *modeid[2] = {"MKL","OpenMP"};
 	int i = 0;
 	FILE *f = fopen(net->report_file, "a+");
 	
@@ -432,7 +431,7 @@ void report(struct network *net)
 	fprintf( f, "epoch : %d\n", net->epoch);
 	fprintf( f, "learning_rate : %f\n", net->learning_rate);
 	fprintf( f, "recognization rate : %d/%d\n", net->best_recog, net->nr_test_data);
-	fprintf( f, "=======================THREADS======================\n");
+/*	fprintf( f, "=======================THREADS======================\n");
 	fprintf( f, "feedforward thread : %d\n", thread[0]);
 	fprintf( f, "back_pass thread1 : %d\n", thread[1]);
 	fprintf( f, "back_pass thread2 : %d\n", thread[2]);
@@ -442,7 +441,7 @@ void report(struct network *net)
 	fprintf( f, "feedforward mode : %s\n", modeid[mode[0]]);
 	fprintf( f, "back_pass mode : %s\n", modeid[mode[1]]);
 	fprintf( f, "backpropagation mode : %s\n", modeid[mode[2]]);
-	fprintf( f, "========================TIME========================\n");
+*/	fprintf( f, "========================TIME========================\n");
 	fprintf( f, "feedforward : %ld.%d sec\n", TOTAL_SEC_TIME(t_feedforward), TOTAL_SEC_UTIME(t_feedforward));
 	fprintf( f, "back_pass : %ld.%d sec\n", TOTAL_SEC_TIME(t_back_pass), TOTAL_SEC_UTIME(t_back_pass));
 	fprintf( f, "backpropagation : %ld.%d sec\n", TOTAL_SEC_TIME(t_backpropagation), TOTAL_SEC_UTIME(t_backpropagation));
@@ -453,4 +452,3 @@ void report(struct network *net)
 	fprintf( f, "total : %ld.%d sec\n", TOTAL_SEC_TIME(total), TOTAL_SEC_UTIME(total));
 
 }
-#endif

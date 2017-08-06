@@ -34,7 +34,6 @@ class Sequential
         }
         if(i == NUMBER_OF_NETWORK+1)
             printf("its error network name does not matching \n");
-        printf("%d %d",net->network_info,i);
     }
     void layersize(int num)
     {
@@ -65,7 +64,6 @@ class Sequential
         }
         if(i == NUMBER_OF_ACTION+1)
             printf("its error action name does not matching \n");
-        printf("%d %d",net->action_info,i);
     }
 
     void loss(char* str)
@@ -82,7 +80,6 @@ class Sequential
         }
         if(i == NUMBER_OF_LOSS+1)
             printf("its error loss name does not matching \n");
-        printf("%d %d",net->loss_info,i);
     }
 
     void optimizer(char* str)
@@ -99,7 +96,6 @@ class Sequential
         }
         if(i == NUMBER_OF_OPTIMIZER+1)
             printf("its error optimizer name does not matching \n");
-        printf("%d %d",net->optimizer_info,i);
     }
 
     void data(char* str)
@@ -116,8 +112,22 @@ class Sequential
         }
         if(i == NUMBER_OF_DATA+1)
             printf("its error data name does not matching \n");
-        printf("%d %d",net->data_info,i);
     }
+    void show()
+    {
+        printf("here is your network information \n");
+        printf("network is %s \n",network_Name[net->network_info]);
+        printf("layer size is ");
+        for(int i=0;i<net->num_layer;i++)
+        {
+            printf(" %d ",net->layer_size[i]);
+        }
+        printf("\n");
+        printf("network action is %s \n",action_Name[net->action_info]);
+        printf("network loss is %s optimizer is %s \n",loss_Name[net->loss_info],optimizer_Name[net->optimizer_info]);
+        printf("data is %s \n",data_Name[net->data_info]);
+    }
+
 //    void add(int num , ...)
 //    {
 //        va_list list;
@@ -170,13 +180,16 @@ class Sequential
 
 		cout<<"7. fit\n";
 		cout<<"This is a function that training data \n ";
-		cout<<".fit(""EPOCH,Batch_size"") \n";
-		cout<<"example : .fit(""5,100"") \n\n";
+		cout<<".fit(""Batch_size,Epoch,Learning_rate"") \n";
+		cout<<"example : .fit(""5,100,0.8"") \n\n";
 	}
-/*
-	void fit(void)
+
+	void fit(int batch, int epoch, double learning_rate)
 	{
-		net = (struct network *) malloc (sizeof(struct network));
+        net->mini_batch_size = batch;
+        net->epoch = epoch;
+        net->learning_rate = learning_rate;
+
 		init(net);
 		mnist_load(net);
 		train(net);
@@ -184,7 +197,7 @@ class Sequential
 		free(net);
 		return;
 	}
-*/	
+	
 
 };
 
@@ -201,7 +214,8 @@ BOOST_PYTHON_MODULE(Ktune)
           .def("loss",&Sequential::loss)
           .def("optimizer",&Sequential::optimizer)
           .def("data",&Sequential::data)
-//		  .def("fit",&Sequential::fit)
+		  .def("fit",&Sequential::fit)
+          .def("show",&Sequential::show)
         ;   
 };using namespace boost::python;
 

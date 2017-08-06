@@ -1,0 +1,10 @@
+
+=======================REPORT=======================
+epoch : 10
+learning_rate : 0.800000
+recognization rate : 9328/10000
+========================TIME========================
+feedforward : 14.499504 sec
+back_pass : 1.29747 sec
+backpropagation : 10.667738 sec
+total : 26.196989 sec
