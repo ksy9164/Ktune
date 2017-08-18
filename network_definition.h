@@ -103,6 +103,7 @@ struct network {
 
 	int *mode;
 	int *thread;
+    double *thread_arr;
 
 	int *record_random;
 

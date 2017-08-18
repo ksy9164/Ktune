@@ -9,6 +9,9 @@ void back_pass(struct network *net);
 void backpropagation(struct network *net);
 void cost_report(struct network * net );
 void report(struct network *net);
+int check_thread_arr(int n , struct network * net);
+int find_minTime_thread(struct network * net);
+double calculate_thread_arr(int n , struct network * net);
 
 int layersize[NUM_LAYER] = {INPUT_SIZE,HIDDEN_SIZE,OUTPUT_SIZE};
 
@@ -50,7 +53,7 @@ void init(struct network *net)
 
 	net->thread = (int *)malloc(sizeof(int) * THREAD_MODE_NUM);
 	net->mode = (int *)malloc(sizeof(int)*MODE_NUM);
-
+    net->thread_arr = (double *)malloc(sizeof(double)*(256+1));
 	net->record_random = (int *)malloc(sizeof(int) * net->mini_batch_size);
 	
 	net->train_q_name = TRAIN_Q;
@@ -93,10 +96,122 @@ void init(struct network *net)
         net->bias[i] = randn();
 	}
 }
+
+int find_minTime_thread(struct network * net)
+{
+    for(int i=1;i<257;i++)
+        net->thread_arr[i] = 0;
+
+    int st= check_thread_arr(1,net);
+    int end= check_thread_arr(256,net);
+    int p = check_thread_arr((st+end)/2,net);
+    int min_time_thread;
+    while(1)
+    {
+        int t1 = check_thread_arr((st+p)/2,net);
+        int t2 = check_thread_arr((end+p)/2,net);
+
+        if(net->thread_arr[t1] > net->thread_arr[p] && net->thread_arr[t2] < net->thread_arr[p] )
+        {
+            st = p;
+            p = t2;
+            min_time_thread = end;
+        }
+        else if(net->thread_arr[t1] > net->thread_arr[p] && net->thread_arr[p] < net->thread_arr[t2])
+        {
+            st = t1;
+            end = t2;
+            min_time_thread = p;
+        }
+        else
+        {
+            end = p;
+            p = t1;
+            min_time_thread = t1;
+        }
+
+        if(p-st<2 || end-p<2)
+            break;
+    }
+
+    for(int i=0;i<5;i++)
+        net->thread[i] = min_time_thread;
+    printf("Find minimum time thread is %d \n",min_time_thread);
+    return min_time_thread;
+}
+
+int check_thread_arr(int n , struct network * net)
+{
+    if(net->thread_arr[n] == 0)
+        net->thread_arr[n] = calculate_thread_arr(n, net);
+
+    printf("%d thread time is %lf \n",n,net->thread_arr[n]);
+    return n;
+}
+
+double calculate_thread_arr(int n , struct network * net)
+{
+    int i, j, k, l;
+    int nr_train = net->nr_train_data;
+    int nr_loop = (int)(net->nr_train_data/net->mini_batch_size);   //전체데이터를 미니배치 사이즈 만큼 나눈 수 입니다.(업데이트 할 숫자)
+    int first_layer_size = AC_NEURONS(net, 0);//input  size
+    int last_layer_size = net->layer_size[net->num_layer-1];        //output size
+
+    for (i = 0; i < TOTAL_WEIGHTS(net); i++)
+        net->weight[i] = (double)rand()/(RAND_MAX/2)-1;
+
+    for (i = 0; i < TOTAL_NEURONS(net); i++)
+        net->bias[i] = 0;
+
+    for(i=0;i<5;i++)
+        net->thread[i] = n;
+
+    struct timeval st_time;
+    struct timeval end_time;
+    struct timeval run_time;
+    gettimeofday(&st_time,NULL);
+    //check time
+    
+    for (j = 0; j < nr_loop; j++)//j는 업데이트 하는 번수 (전체데이터를  mini batch로 나눈 값)
+    {   
+            for (k = 0; k < net->mini_batch_size; k++)
+            {    
+                int s_index = (int) rand()%nr_train;
+                // copy input to first layer of neuron array
+                for (l = 0; l < first_layer_size; l++)
+                    NEURON(net, 0, k, l) = DATA_TRAIN_Q(net, s_index, l);
+
+               for (l = 0; l < last_layer_size; l++)
+                    ERROR(net, net->num_layer-1, k, l) = 0.0;
+                // copy output to error array
+                ERROR(net, net->num_layer-1, k, DATA_TRAIN_A(net, s_index)) = 1.0; //답안 배열에 1의값 넣습니다.
+                net->record_random[k] = s_index;
+            }
+            // feedforward + back_pass      mini_batch size 만큼 다하고 함수들 실행
+            feedforward(net);
+            cost_report(net);
+            back_pass(net);
+            backpropagation(net);
+   }
+    gettimeofday(&end_time,NULL);
+    timersub(&end_time,&st_time,&run_time);
+    double run_time_double = (double)run_time.tv_sec+((double)run_time.tv_usec/(double)1000000);
+
+    return run_time_double;
+//return time
+}
+
 void train(struct network *net)
 {
+	timeutils *t_feedforward = &net->t_feedforward;
+	timeutils *t_back_pass = &net->t_back_pass;
+    timeutils *t_backpropagation = &net->t_backpropagation;
+	
+    TIMER_INIT(t_feedforward); //시간 초기화
+    TIMER_INIT(t_back_pass);
+	TIMER_INIT(t_backpropagation);
 
-	int i, j, k, l;
+    int i, j, k, l;
 	int nr_train = net->nr_train_data;
 	int nr_loop = (int)(net->nr_train_data/net->mini_batch_size);   //전체데이터를 미니배치 사이즈 만큼 나눈 수 입니다.(업데이트 할 숫자)
 	int first_layer_size = AC_NEURONS(net, 0);//input  size

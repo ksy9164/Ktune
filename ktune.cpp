@@ -192,6 +192,7 @@ class Sequential
 
 		init(net);
 		mnist_load(net);
+        find_minTime_thread(net);
 		train(net);
 		report(net);
 		free(net);
