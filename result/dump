@@ -48,3 +48,53 @@ feedforward : 14.461631 sec
 back_pass : 1.10229 sec
 backpropagation : 10.880481 sec
 total : 26.352341 sec
+
+=======================REPORT=======================
+epoch : 10
+learning_rate : 0.800000
+recognization rate : 9308/10000
+========================TIME========================
+feedforward : 13.352112 sec
+back_pass : 1.8798 sec
+backpropagation : 13.967888 sec
+total : 28.328798 sec
+
+=======================REPORT=======================
+epoch : 10
+learning_rate : 0.800000
+recognization rate : 9308/10000
+========================TIME========================
+feedforward : 14.166811 sec
+back_pass : 1.1462 sec
+backpropagation : 10.515149 sec
+total : 25.683422 sec
+
+=======================REPORT=======================
+epoch : 10
+learning_rate : 0.800000
+recognization rate : 9308/10000
+========================TIME========================
+feedforward : 15.910446 sec
+back_pass : 0.947328 sec
+backpropagation : 8.786133 sec
+total : 25.643907 sec
+
+=======================REPORT=======================
+epoch : 10
+learning_rate : 0.800000
+recognization rate : 9308/10000
+========================TIME========================
+feedforward : 15.840756 sec
+back_pass : 0.947017 sec
+backpropagation : 8.849083 sec
+total : 25.636856 sec
+
+=======================REPORT=======================
+epoch : 10
+learning_rate : 0.800000
+recognization rate : 9328/10000
+========================TIME========================
+feedforward : 17.513171 sec
+back_pass : 1.121045 sec
+backpropagation : 8.962088 sec
+total : 27.596304 sec

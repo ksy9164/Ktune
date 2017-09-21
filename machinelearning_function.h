@@ -1,9 +1,9 @@
 int predict(struct network *net);
-double sigmoid_prime(double z);
-double sigmoid(double z);
+float sigmoid_prime(float z);
+float sigmoid(float z);
 void train(struct network *net);
 void init(struct network *net);
-double randn(void);
+float randn(void);
 void feedforward(struct network *net);
 void back_pass(struct network *net);
 void backpropagation(struct network *net);
@@ -11,18 +11,18 @@ void cost_report(struct network * net );
 void report(struct network *net);
 int check_thread_arr(int n , struct network * net);
 int find_minTime_thread(struct network * net);
-double calculate_thread_arr(int n , struct network * net);
+float calculate_thread_arr(int n , struct network * net);
 
 int layersize[NUM_LAYER] = {INPUT_SIZE,HIDDEN_SIZE,OUTPUT_SIZE};
 
 
-double randn(void)
+float randn(void)
 {
-	    double v1, v2, s;
+	    float v1, v2, s;
 
 		    do {
-				  v1 =  2 * ((double) rand() / RAND_MAX) - 1;      // -1.0 ~ 1.0 까지
-				  v2 =  2 * ((double) rand() / RAND_MAX) - 1;      // -1.0 ~ 1.0 까지의 값
+				  v1 =  2 * ((float) rand() / RAND_MAX) - 1;      // -1.0 ~ 1.0 까지
+				  v2 =  2 * ((float) rand() / RAND_MAX) - 1;      // -1.0 ~ 1.0 까지의 값
 				  s = v1 * v1 + v2 * v2;
 			} while (s >= 1 || s == 0);
 
@@ -48,12 +48,12 @@ void init(struct network *net)
 	
 	net->cost_rate = 0;
 
-	net->ac_weight = (int *) malloc(sizeof(double) * net->num_layer);
-	net->ac_neuron = (int *) malloc(sizeof(double) * net->num_layer);
+	net->ac_weight = (int *) malloc(sizeof(float) * net->num_layer);
+	net->ac_neuron = (int *) malloc(sizeof(float) * net->num_layer);
 
 	net->thread = (int *)malloc(sizeof(int) * THREAD_MODE_NUM);
 	net->mode = (int *)malloc(sizeof(int)*MODE_NUM);
-    net->thread_arr = (double *)malloc(sizeof(double)*(256+1));
+    net->thread_arr = (float *)malloc(sizeof(float)*(256+1));
 	net->record_random = (int *)malloc(sizeof(int) * net->mini_batch_size);
 	
 	net->train_q_name = TRAIN_Q;
@@ -81,11 +81,11 @@ void init(struct network *net)
 		before_ac_weights = net->ac_weight[i]; 
 	}
 
-	net->neuron = (double *) malloc(sizeof(double) * net->mini_batch_size * TOTAL_NEURONS(net)); //neuron 배열의 크기는 minibatch_size * 총 뉴련의 숫자
-	net->zs = (double *) malloc(sizeof(double) * net->mini_batch_size * TOTAL_NEURONS(net));
-	net->error =  (double *) malloc(sizeof(double) * net->mini_batch_size * TOTAL_NEURONS(net));
-	net->bias = (double *) malloc(sizeof(double) * TOTAL_NEURONS(net));
-	net->weight = (double *) malloc(sizeof(double) * TOTAL_WEIGHTS(net));
+	net->neuron = (float *) malloc(sizeof(float) * net->mini_batch_size * TOTAL_NEURONS(net)); //neuron 배열의 크기는 minibatch_size * 총 뉴련의 숫자
+	net->zs = (float *) malloc(sizeof(float) * net->mini_batch_size * TOTAL_NEURONS(net));
+	net->error =  (float *) malloc(sizeof(float) * net->mini_batch_size * TOTAL_NEURONS(net));
+	net->bias = (float *) malloc(sizeof(float) * TOTAL_NEURONS(net));
+	net->weight = (float *) malloc(sizeof(float) * TOTAL_WEIGHTS(net));
 
 
 	for (i = 0; i < TOTAL_WEIGHTS(net); i++) {
@@ -149,7 +149,7 @@ int check_thread_arr(int n , struct network * net)
     return n;
 }
 
-double calculate_thread_arr(int n , struct network * net)
+float calculate_thread_arr(int n , struct network * net)
 {
     int i, j, k, l;
     int nr_train = net->nr_train_data;
@@ -158,7 +158,7 @@ double calculate_thread_arr(int n , struct network * net)
     int last_layer_size = net->layer_size[net->num_layer-1];        //output size
 
     for (i = 0; i < TOTAL_WEIGHTS(net); i++)
-        net->weight[i] = (double)rand()/(RAND_MAX/2)-1;
+        net->weight[i] = (float)rand()/(RAND_MAX/2)-1;
 
     for (i = 0; i < TOTAL_NEURONS(net); i++)
         net->bias[i] = 0;
@@ -195,9 +195,9 @@ double calculate_thread_arr(int n , struct network * net)
    }
     gettimeofday(&end_time,NULL);
     timersub(&end_time,&st_time,&run_time);
-    double run_time_double = (double)run_time.tv_sec+((double)run_time.tv_usec/(double)1000000);
+    float run_time_float = (float)run_time.tv_sec+((float)run_time.tv_usec/(float)1000000);
 
-    return run_time_double;
+    return run_time_float;
 //return time
 }
 
@@ -219,7 +219,7 @@ void train(struct network *net)
 	int recog = 0;
 	// init weight with bias with random values
 	for (i = 0; i < TOTAL_WEIGHTS(net); i++) {
-        net->weight[i] = (double)rand()/(RAND_MAX/2)-1;
+        net->weight[i] = (float)rand()/(RAND_MAX/2)-1;
 	}
 
 	for (i = 0; i < TOTAL_NEURONS(net); i++) {
@@ -264,7 +264,7 @@ void train(struct network *net)
 void feedforward(struct network *net)
 {
 	int i, j, k, l, m;
-	double sum = 0.0;
+	float sum = 0.0;
     timeutils *t_feedforward = &net->t_feedforward;
 	
 	// feedforward
@@ -294,11 +294,11 @@ void feedforward(struct network *net)
 #else
 else
 {  
-	double *tmp, *tmp_bias;
+	float *tmp, *tmp_bias;
 
     for (i = 0; i < net->num_layer-1; i++) 
 	{
-        cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, net->mini_batch_size, net->layer_size[i+1], net->layer_size[i], 1.0, (const double *)&NEURON(net, i, 0, 0),net->layer_size[i], (const double *)&WEIGHT(net, i, 0, 0), net->layer_size[i+1], 0.0,&NEURON(net, i+1, 0, 0), net->layer_size[i+1]); //weight 와 입력값을 곱해서 배열에 저장합니다.
+        cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, net->mini_batch_size, net->layer_size[i+1], net->layer_size[i], 1.0, (const float *)&NEURON(net, i, 0, 0),net->layer_size[i], (const float *)&WEIGHT(net, i, 0, 0), net->layer_size[i+1], 0.0,&NEURON(net, i+1, 0, 0), net->layer_size[i+1]); //weight 와 입력값을 곱해서 배열에 저장합니다.
 
 		#pragma omp parallel for num_threads(net->thread[0]) 
 		for (j = 0; j < net->mini_batch_size; j++)
@@ -317,7 +317,7 @@ void back_pass(struct network *net)
 {
 	int i, j, k, l;
     int nr_chunk = net->thread[0];
-	double sum = 0.0;
+	float sum = 0.0;
     timeutils *t_back_pass = &net->t_back_pass;
 
 	START_TIME(t_back_pass);
@@ -354,12 +354,12 @@ void back_pass(struct network *net)
 #else
 else
 {
-	double * temp1;//neuron - error
-    double * temp2;//sigmoid zs
-    double * temp_error;
+	float * temp1;//neuron - error
+    float * temp2;//sigmoid zs
+    float * temp_error;
 
-    temp1 = (double*)malloc(sizeof(double) * net->mini_batch_size * net->layer_size[net->num_layer-1]);
-    temp2 = (double*)malloc(sizeof(double) * net->mini_batch_size * net->layer_size[net->num_layer-1]);
+    temp1 = (float*)malloc(sizeof(float) * net->mini_batch_size * net->layer_size[net->num_layer-1]);
+    temp2 = (float*)malloc(sizeof(float) * net->mini_batch_size * net->layer_size[net->num_layer-1]);
 
     // neuron - error
     vdSub(net->layer_size[net->num_layer-1]*net->mini_batch_size,&NEURON(net, net->num_layer-1, 0, 0),&ERROR(net, net->num_layer-1, 0, 0),temp1);
@@ -380,10 +380,10 @@ else
 		for (j = 0; j < net->mini_batch_size; j++)
         {
             //temp_error = weight * past_error
-            temp_error = (double*)malloc(sizeof(double)*net->layer_size[i]);
+            temp_error = (float*)malloc(sizeof(float)*net->layer_size[i]);
 
             //calculate temp_error
-            cblas_dgemv (CblasRowMajor, CblasNoTrans,  net->layer_size[i], net->layer_size[i+1], 1.0,(const double *)&WEIGHT(net, i, 0, 0), net->layer_size[i+1],(const double *)&ERROR(net,i+1, j, 0),1 ,0.0 , temp_error , 1);
+            cblas_dgemv (CblasRowMajor, CblasNoTrans,  net->layer_size[i], net->layer_size[i+1], 1.0,(const float *)&WEIGHT(net, i, 0, 0), net->layer_size[i+1],(const float *)&ERROR(net,i+1, j, 0),1 ,0.0 , temp_error , 1);
 
             //calculate delta = past error * weight * sigmoidprime(zs)
             #pragma omp parallel for num_threads(net->thread[2])
@@ -404,9 +404,9 @@ void backpropagation(struct network *net)
 {
 	int i, j, k, l;
     timeutils *t_backpropagation = &net->t_backpropagation;
-	double eta = net->learning_rate;
-	double mini = (double) net->mini_batch_size;
-	double sum = 0;
+	float eta = net->learning_rate;
+	float mini = (float) net->mini_batch_size;
+	float sum = 0;
 
 
 	START_TIME(t_backpropagation);
@@ -449,19 +449,19 @@ else
 {
 	for (i = 0; i < net->num_layer-1; i++)
 	{
-		cblas_dgemm(CblasRowMajor, CblasTrans, CblasNoTrans,net->layer_size[i], net->layer_size[i+1],net->mini_batch_size, -(eta/mini), (const double *)&NEURON(net, i, 0, 0),net->layer_size[i], (const double *)&ERROR(net, i+1, 0, 0), net->layer_size[i+1], 1.0,&WEIGHT(net, i, 0, 0), net->layer_size[i+1]);
+		cblas_dgemm(CblasRowMajor, CblasTrans, CblasNoTrans,net->layer_size[i], net->layer_size[i+1],net->mini_batch_size, -(eta/mini), (const float *)&NEURON(net, i, 0, 0),net->layer_size[i], (const float *)&ERROR(net, i+1, 0, 0), net->layer_size[i+1], 1.0,&WEIGHT(net, i, 0, 0), net->layer_size[i+1]);
 	}
 }
 #endif
 	END_TIME(t_backpropagation);
 }
 
-double sigmoid(double z)
+float sigmoid(float z)
 {
 	return (1/(1 + exp(-z)));
 }
 
-double sigmoid_prime(double z)
+float sigmoid_prime(float z)
 {
 	return sigmoid(z)*(1-sigmoid(z));
 }
@@ -471,11 +471,11 @@ int predict(struct network *net)
 	int nr_true = 0;
 
 	int i, j, k, l;
-	double sum = 0.0;
+	float sum = 0.0;
 	int nr_loop = (int)(net->nr_test_data);
 	int first_layer_size = AC_NEURONS(net, 0);
 	int last_layer_size = net->layer_size[net->num_layer-1];
-	double cost_rate = 0;
+	float cost_rate = 0;
 
 	for (i = 0; i < nr_loop; i++) {
 		// copy input to first layer of neuron array
@@ -498,7 +498,7 @@ int predict(struct network *net)
 			}
 		}
 
-		double max = NEURON(net, net->num_layer-1, 0, 0);
+		float max = NEURON(net, net->num_layer-1, 0, 0);
 		int max_idx = 0;
 
 		for (j = 0; j < last_layer_size; j++) {

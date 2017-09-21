@@ -89,31 +89,31 @@ struct network {
 	unsigned int nr_train_data;
 	unsigned int nr_test_data;
 
-	double *train_q, *test_q;
+	float *train_q, *test_q;
 	int *train_a, *test_a;
 
-	double *neuron;
-	double *zs;
-	double *error;
-	double *bias;
-	double *weight;
+	float *neuron;
+	float *zs;
+	float *error;
+	float *bias;
+	float *weight;
 
 	int *ac_weight;
 	int *ac_neuron;
 
 	int *mode;
 	int *thread;
-    double *thread_arr;
+    float *thread_arr;
 
 	int *record_random;
 
-	double learning_rate;
+	float learning_rate;
 	int mini_batch_size;
 	int epoch;
 
 	int best_recog;
 
-	double cost_rate;
+	float cost_rate;
 
 	struct timeutils t_feedforward;
 	struct timeutils t_back_pass;

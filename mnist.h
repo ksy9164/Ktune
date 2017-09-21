@@ -23,9 +23,9 @@ void mnist_load(struct network * net)
     net->nr_train_data = TRAIN_DATA_NUM;
 	net->nr_test_data = TEST_DATA_NUM;
 
-  	net->train_q = (double *) malloc(net->layer_size[0] * net->nr_train_data *sizeof(double));
+  	net->train_q = (float *) malloc(net->layer_size[0] * net->nr_train_data *sizeof(float));
 	net->train_a = (int *)calloc(net->nr_train_data,sizeof(int));
-    net->test_q = (double *) malloc(net->layer_size[0] * net->nr_test_data * sizeof(double));
+    net->test_q = (float *) malloc(net->layer_size[0] * net->nr_test_data * sizeof(float));
 	net->test_a = (int *) calloc(net->nr_test_data, sizeof(int));
 
     fread(temp, sizeof(unsigned char), 16, inf_tr);	// trash
@@ -47,7 +47,7 @@ void mnist_load(struct network * net)
 	{
 		for(j=0;j<net->layer_size[0];j++)
 		{
-			net->train_q[i*net->layer_size[0]+j ]= (double)temp_tr_q[i*net->layer_size[0]+j];
+			net->train_q[i*net->layer_size[0]+j ]= (float)temp_tr_q[i*net->layer_size[0]+j];
 		}
 		net->train_a[i] = (int)temp_tr_a[i];
 	}
@@ -56,7 +56,7 @@ void mnist_load(struct network * net)
 	{
 		for(j=0;j<net->layer_size[0];j++)
 		{
-			net->test_q[i*net->layer_size[0]+j ]= (double)temp_te_q[i*net->layer_size[0]+j];
+			net->test_q[i*net->layer_size[0]+j ]= (float)temp_te_q[i*net->layer_size[0]+j];
 		}
 		net->test_a[i] = (int)temp_te_a[i];
 	}
@@ -64,7 +64,7 @@ void mnist_load(struct network * net)
 	for(i=0;i<TRAIN_DATA_NUM;i++)
 	{
 		for(j=0;j<net->layer_size[0];j++)
-		{	if((double)temp_tr_q[i*net->layer_size[0]+j] == 0)
+		{	if((float)temp_tr_q[i*net->layer_size[0]+j] == 0)
 			{	
 				net->train_q[i*net->layer_size[0]+j ] = 0;
 			}
@@ -81,7 +81,7 @@ void mnist_load(struct network * net)
 	{
 		for(j=0;j<net->layer_size[0];j++)
 		{	
-			if( (double)temp_te_q[i*net->layer_size[0]+j] == 0)
+			if( (float)temp_te_q[i*net->layer_size[0]+j] == 0)
 			{
 				net->test_q[i*net->layer_size[0]+j ] = 0;
 			}

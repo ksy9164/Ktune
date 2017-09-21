@@ -184,7 +184,7 @@ class Sequential
 		cout<<"example : .fit(""5,100,0.8"") \n\n";
 	}
 
-	void fit(int batch, int epoch, double learning_rate)
+	void fit(int batch, int epoch, float learning_rate)
 	{
         net->mini_batch_size = batch;
         net->epoch = epoch;
@@ -192,7 +192,7 @@ class Sequential
 
 		init(net);
 		mnist_load(net);
-        find_minTime_thread(net);
+  //      find_minTime_thread(net);
 		train(net);
 		report(net);
 		free(net);
