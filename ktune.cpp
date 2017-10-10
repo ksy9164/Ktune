@@ -1,9 +1,11 @@
 #include<boost/python.hpp>
 #include<cstdarg>
 #include<iostream>
+#include"mkl.h"
 #include"timeutils.h"
 #include"network_definition.h"
 #include"mnist.h"
+#include"cifar.h"
 #include"machinelearning_function.h"
 using namespace std;
 
@@ -127,19 +129,6 @@ class Sequential
         printf("network loss is %s optimizer is %s \n",loss_Name[net->loss_info],optimizer_Name[net->optimizer_info]);
         printf("data is %s \n",data_Name[net->data_info]);
     }
-
-//    void add(int num , ...)
-//    {
-//        va_list list;
-//        va_start(list,num);
-//        net->num_layer = num;
-//        net->layer_size = (int *)malloc(sizeof(int)*num);
-//        for(int i=0;i<num;i++)
-//        {
-//            net->layer_size[i] = va_arg(list,int);
-//        }
-//        va_end(list);
-//    }
     
 	void help(void)
 	{
@@ -191,8 +180,12 @@ class Sequential
         net->learning_rate = learning_rate;
 
 		init(net);
-		mnist_load(net);
-  //      find_minTime_thread(net);
+        if(net->data_info == 0)
+		    mnist_load(net);
+        if(net->data_info == 1)
+            cifar_load(net);
+
+  //    find_minTime_thread(net);
 		train(net);
 		report(net);
 		free(net);

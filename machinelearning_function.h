@@ -270,46 +270,46 @@ void feedforward(struct network *net)
 	// feedforward
 	START_TIME(t_feedforward);
     sum = 0.0;
-#if 1
-//if(net->mode[0])
-//{	
-	for (i = 0; i < net->num_layer-1; i++)
-	{               
-		#pragma omp parallel for num_threads(net->thread[0]) private(j, k, l) reduction(+:sum) collapse(2)
-		for(j=0;j<net->mini_batch_size;j++)
-		{
-			for (k = 0; k < net->layer_size[i+1]; k++)
-			{    
-				for (l = 0; l < net->layer_size[i]; l++)
-				{
-					sum = sum + NEURON(net, i, j, l) * WEIGHT(net, i, l, k);
-				}
-				ZS(net, i+1, j, k) = sum + BIAS(net, i+1, k);
-				NEURON(net, i+1, j, k) = sigmoid(ZS(net, i+1, j, k));
-				sum = 0.0;
-			}
-		}
-	}
-//}
-#else
-else
-{  
-	float *tmp, *tmp_bias;
+    if(net->mode[0])
+    {	
+        for (i = 0; i < net->num_layer-1; i++)
+        {               
+            #pragma omp parallel for num_threads(net->thread[0]) private(j, k, l) reduction(+:sum) collapse(2)
+            for(j=0;j<net->mini_batch_size;j++)
+            {
+                for (k = 0; k < net->layer_size[i+1]; k++)
+                {    
+                    for (l = 0; l < net->layer_size[i]; l++)
+                    {
+                        sum = sum + NEURON(net, i, j, l) * WEIGHT(net, i, l, k);
+                    }
+                    ZS(net, i+1, j, k) = sum + BIAS(net, i+1, k);
+                    NEURON(net, i+1, j, k) = sigmoid(ZS(net, i+1, j, k));
+                    sum = 0.0;
+                }
+            }
+        }
+    }
+    else
+    {  
+        float *tmp, *tmp_bias;
 
-    for (i = 0; i < net->num_layer-1; i++) 
-	{
-        cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, net->mini_batch_size, net->layer_size[i+1], net->layer_size[i], 1.0, (const float *)&NEURON(net, i, 0, 0),net->layer_size[i], (const float *)&WEIGHT(net, i, 0, 0), net->layer_size[i+1], 0.0,&NEURON(net, i+1, 0, 0), net->layer_size[i+1]); //weight 와 입력값을 곱해서 배열에 저장합니다.
+        for (i = 0; i < net->num_layer-1; i++) 
+        {
+            cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, net->mini_batch_size, net->layer_size[i+1], net->layer_size[i], 1.0, (const float *)&NEURON(net, i, 0, 0),net->layer_size[i], (const float *)&WEIGHT(net, i, 0, 0), net->layer_size[i+1], 0.0,&NEURON(net, i+1, 0, 0), net->layer_size[i+1]); //weight 와 입력값을 곱해서 배열에 저장합니다.
 
-		#pragma omp parallel for num_threads(net->thread[0]) 
-		for (j = 0; j < net->mini_batch_size; j++)
+   
+	    #pragma omp parallel for num_threads(net->thread[0]) private(j,k) collapse(2)
+        for (j = 0; j < net->mini_batch_size; j++)
+            {
             for (k = 0; k < net->layer_size[i+1]; k++)
-			{ 
-				ZS(net, i+1, j, k) = NEURON(net,i+1,j,k)+ BIAS(net,i+1,k);
-				NEURON(net, i+1, j, k) = sigmoid(ZS(net, i+1, j, k)); //zs에  sigmoid를 취한 값을 그다음 뉴런에 저장합니다!!
-			}
-	}
-}
-#endif
+                { 
+                    ZS(net, i+1, j, k) = NEURON(net,i+1,j,k)+ BIAS(net,i+1,k);
+                    NEURON(net, i+1, j, k) = sigmoid(ZS(net, i+1, j, k)); //zs에  sigmoid를 취한 값을 그다음 뉴런에 저장합니다!!
+                }
+            }
+        }
+    }
 	END_TIME(t_feedforward);
 }
 
@@ -322,10 +322,9 @@ void back_pass(struct network *net)
 
 	START_TIME(t_back_pass);
 
-//if(net->mode[1])
-//{
-// calculate delta
-#if 1
+if(net->mode[1])
+{
+    //calculate delta
 	#pragma omp parallel for num_threads(net->thread[1]) private(i, j) collapse(2)
 	for (i = 0; i < net->mini_batch_size; i++) {
 		for (j = 0; j < net->layer_size[net->num_layer-1]; j++) {
@@ -350,8 +349,7 @@ void back_pass(struct network *net)
 			}
 		}
 	}
-//}
-#else
+}
 else
 {
 	float * temp1;//neuron - error
@@ -362,7 +360,7 @@ else
     temp2 = (float*)malloc(sizeof(float) * net->mini_batch_size * net->layer_size[net->num_layer-1]);
 
     // neuron - error
-    vdSub(net->layer_size[net->num_layer-1]*net->mini_batch_size,&NEURON(net, net->num_layer-1, 0, 0),&ERROR(net, net->num_layer-1, 0, 0),temp1);
+    vsSub(net->layer_size[net->num_layer-1]*net->mini_batch_size,&NEURON(net, net->num_layer-1, 0, 0),&ERROR(net, net->num_layer-1, 0, 0),temp1);
 
     //sigmoid zs
     #pragma omp parallel for num_threads(net->thread[1])
@@ -372,7 +370,7 @@ else
 	    	}
 
     //temp1 * temp2 (when this loop is end  first delta is done!!)
-    vdMul(net->layer_size[net->num_layer-1]*net->mini_batch_size,temp1,temp2,&ERROR(net, net->num_layer-1, 0, 0));
+    vsMul(net->layer_size[net->num_layer-1]*net->mini_batch_size,temp1,temp2,&ERROR(net, net->num_layer-1, 0, 0));
 
     //caculrate delta to using backpropagation algorithm
     for (i = net->num_layer-2; i > 0; i--)
@@ -383,7 +381,7 @@ else
             temp_error = (float*)malloc(sizeof(float)*net->layer_size[i]);
 
             //calculate temp_error
-            cblas_dgemv (CblasRowMajor, CblasNoTrans,  net->layer_size[i], net->layer_size[i+1], 1.0,(const float *)&WEIGHT(net, i, 0, 0), net->layer_size[i+1],(const float *)&ERROR(net,i+1, j, 0),1 ,0.0 , temp_error , 1);
+            cblas_sgemv (CblasRowMajor, CblasNoTrans,  net->layer_size[i], net->layer_size[i+1], 1.0,(const float *)&WEIGHT(net, i, 0, 0), net->layer_size[i+1],(const float *)&ERROR(net,i+1, j, 0),1 ,0.0 , temp_error , 1);
 
             //calculate delta = past error * weight * sigmoidprime(zs)
             #pragma omp parallel for num_threads(net->thread[2])
@@ -395,7 +393,6 @@ else
         }
     }
 }
-#endif
 	END_TIME(t_back_pass);
 }
 
@@ -414,7 +411,7 @@ void backpropagation(struct network *net)
 	//update bias
 	for (i = 1; i < net->num_layer; i++) 
 	{
-	#pragma omp parallel for num_threads(net->thread[3]) private(j, k, l)
+	#pragma omp parallel for num_threads(net->thread[3]) private(j, k)
 		for (j = 0; j < net->layer_size[i]; j++)
 		{
 			for (k = 0; k < net->mini_batch_size; k++) 
@@ -424,9 +421,8 @@ void backpropagation(struct network *net)
 		}
 	}
 //update weight
-#if 1
-//if(net->mode[2])
-//{	
+if(net->mode[2])
+{	
 	// update weight
 	for (i = 0; i < net->num_layer-1; i++) {
 #pragma omp parallel for num_threads(net->thread[4]) private(j, k, l) collapse(2)
@@ -442,17 +438,15 @@ sum = 0;
 			}
 		}
 	}
-//}
-#else
+}
 // update weight
 else
 {
 	for (i = 0; i < net->num_layer-1; i++)
 	{
-		cblas_dgemm(CblasRowMajor, CblasTrans, CblasNoTrans,net->layer_size[i], net->layer_size[i+1],net->mini_batch_size, -(eta/mini), (const float *)&NEURON(net, i, 0, 0),net->layer_size[i], (const float *)&ERROR(net, i+1, 0, 0), net->layer_size[i+1], 1.0,&WEIGHT(net, i, 0, 0), net->layer_size[i+1]);
+		cblas_sgemm(CblasRowMajor, CblasTrans, CblasNoTrans,net->layer_size[i], net->layer_size[i+1],net->mini_batch_size, -(eta/mini), (const float *)&NEURON(net, i, 0, 0),net->layer_size[i], (const float *)&ERROR(net, i+1, 0, 0), net->layer_size[i+1], 1.0,&WEIGHT(net, i, 0, 0), net->layer_size[i+1]);
 	}
 }
-#endif
 	END_TIME(t_backpropagation);
 }
 
@@ -527,8 +521,8 @@ void cost_report(struct network * net )
 
 void report(struct network *net)
 {
-//    int *thread = (int *)net-> thread;
-//	int *mode = (int *)net->mode;
+    int *thread = (int *)net-> thread;
+	int *mode = (int *)net->mode;
 
     timeutils *t_feedforward = &net->t_feedforward;
     timeutils *t_back_pass = &net->t_back_pass;
@@ -536,9 +530,8 @@ void report(struct network *net)
     timeutils t;
     timeutils *total = &t;
 
-    TIMER_INIT(total);
 
-//	char *modeid[2] = {"MKL","OpenMP"};
+	char *modeid[2] = {"MKL","OpenMP"};
 	int i = 0;
 	FILE *f = fopen(net->report_file, "a+");
 	
@@ -546,7 +539,7 @@ void report(struct network *net)
 	fprintf( f, "epoch : %d\n", net->epoch);
 	fprintf( f, "learning_rate : %f\n", net->learning_rate);
 	fprintf( f, "recognization rate : %d/%d\n", net->best_recog, net->nr_test_data);
-/*	fprintf( f, "=======================THREADS======================\n");
+	fprintf( f, "=======================THREADS======================\n");
 	fprintf( f, "feedforward thread : %d\n", thread[0]);
 	fprintf( f, "back_pass thread1 : %d\n", thread[1]);
 	fprintf( f, "back_pass thread2 : %d\n", thread[2]);
@@ -556,11 +549,12 @@ void report(struct network *net)
 	fprintf( f, "feedforward mode : %s\n", modeid[mode[0]]);
 	fprintf( f, "back_pass mode : %s\n", modeid[mode[1]]);
 	fprintf( f, "backpropagation mode : %s\n", modeid[mode[2]]);
-*/	fprintf( f, "========================TIME========================\n");
+	fprintf( f, "========================TIME========================\n");
 	fprintf( f, "feedforward : %ld.%d sec\n", TOTAL_SEC_TIME(t_feedforward), TOTAL_SEC_UTIME(t_feedforward));
 	fprintf( f, "back_pass : %ld.%d sec\n", TOTAL_SEC_TIME(t_back_pass), TOTAL_SEC_UTIME(t_back_pass));
 	fprintf( f, "backpropagation : %ld.%d sec\n", TOTAL_SEC_TIME(t_backpropagation), TOTAL_SEC_UTIME(t_backpropagation));
 
+    TIMER_INIT(total);
     TIMER_ADD(t_feedforward, total);
     TIMER_ADD(t_back_pass, total);
     TIMER_ADD(t_backpropagation, total);

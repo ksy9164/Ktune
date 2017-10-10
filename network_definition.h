@@ -60,14 +60,14 @@ enum DATA_T {BIAS, WEIGHT, ERROR, ZS, NEURON};
 #define NUMBER_OF_ACTION 2
 #define NUMBER_OF_LOSS 1
 #define NUMBER_OF_OPTIMIZER 1
-#define NUMBER_OF_DATA 1
+#define NUMBER_OF_DATA 2
 
 
 const char * network_Name[NUMBER_OF_NETWORK] = {"fully connected","CNN"};
 const char * action_Name[NUMBER_OF_ACTION] = {"sigmoid","relu"};
 const char * loss_Name[NUMBER_OF_LOSS] = {"mean_squared_error"};
 const char * optimizer_Name[NUMBER_OF_OPTIMIZER] = {"sgd"};
-const char * data_Name[NUMBER_OF_DATA] = {"mnist"};
+const char * data_Name[NUMBER_OF_DATA] = {"mnist","cifar"};
 
 struct network {
 

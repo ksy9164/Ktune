@@ -32,9 +32,9 @@ void cifar_load(struct network * net)
 	net->nr_test_data = TEST_DATA_NUM;
 
     //진짜로 데이터를 담을 그릇!!
-  	net->train_q = (double *) malloc(net->layer_size[0] * net->nr_train_data *sizeof(double));
+  	net->train_q = (float *) malloc(net->layer_size[0] * net->nr_train_data *sizeof(float));
 	net->train_a = (int *)calloc(net->nr_train_data,sizeof(int));
-    net->test_q = (double *) malloc(net->layer_size[0] * net->nr_test_data * sizeof(double));
+    net->test_q = (float *) malloc(net->layer_size[0] * net->nr_test_data * sizeof(float));
 	net->test_a = (int *) calloc(net->nr_test_data, sizeof(int));
 
     //변환을 위한 임시 데이터 저장소
@@ -65,8 +65,8 @@ void cifar_load(struct network * net)
             }
             else
             {
-                net->train_q[i*net->layer_size[0]+j-1]= (double)temp_tr1[cnt*(net->layer_size[0]+1)+j];
-                net->test_q[i*net->layer_size[0]+j-1]= (double)temp_te[cnt*(net->layer_size[0]+1)+j];
+                net->train_q[i*net->layer_size[0]+j-1]= (float)temp_tr1[cnt*(net->layer_size[0]+1)+j];
+                net->test_q[i*net->layer_size[0]+j-1]= (float)temp_te[cnt*(net->layer_size[0]+1)+j];
             }
         }
         cnt++;
@@ -80,7 +80,7 @@ void cifar_load(struct network * net)
             if(j==0)
                 net->train_a[i]= (int)temp_tr2[cnt*(net->layer_size[0]+1)];
             else
-                net->train_q[i*net->layer_size[0]+j-1]= (double)temp_tr2[cnt*(net->layer_size[0]+1)+j];
+                net->train_q[i*net->layer_size[0]+j-1]= (float)temp_tr2[cnt*(net->layer_size[0]+1)+j];
         }
         cnt++;
     }
@@ -93,7 +93,7 @@ void cifar_load(struct network * net)
             if(j==0)
                 net->train_a[i]= (int)temp_tr3[cnt*(net->layer_size[0]+1)];
             else
-                net->train_q[i*net->layer_size[0]+j-1]= (double)temp_tr3[cnt*(net->layer_size[0]+1)+j];
+                net->train_q[i*net->layer_size[0]+j-1]= (float)temp_tr3[cnt*(net->layer_size[0]+1)+j];
         }
         cnt++;
     }
@@ -106,7 +106,7 @@ void cifar_load(struct network * net)
             if(j==0)
                 net->train_a[i]= (int)temp_tr4[cnt*(net->layer_size[0]+1)];
             else
-                net->train_q[i*net->layer_size[0]+j-1]= (double)temp_tr4[cnt*(net->layer_size[0]+1)+j];
+                net->train_q[i*net->layer_size[0]+j-1]= (float)temp_tr4[cnt*(net->layer_size[0]+1)+j];
         }
         cnt++;
     }
@@ -119,7 +119,7 @@ void cifar_load(struct network * net)
             if(j==0)
                 net->train_a[i]= (int)temp_tr5[cnt*(net->layer_size[0]+1)];
             else
-                net->train_q[i*net->layer_size[0]+j-1]= (double)temp_tr5[cnt*(net->layer_size[0]+1)+j];
+                net->train_q[i*net->layer_size[0]+j-1]= (float)temp_tr5[cnt*(net->layer_size[0]+1)+j];
         }
         cnt++;
     }
