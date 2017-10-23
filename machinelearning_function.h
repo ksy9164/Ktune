@@ -559,5 +559,6 @@ void report(struct network *net)
     TIMER_ADD(t_back_pass, total);
     TIMER_ADD(t_backpropagation, total);
 	fprintf( f, "total : %ld.%d sec\n", TOTAL_SEC_TIME(total), TOTAL_SEC_UTIME(total));
+	printf( "total : %ld.%d sec\n", TOTAL_SEC_TIME(total), TOTAL_SEC_UTIME(total));
 
 }

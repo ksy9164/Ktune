@@ -1,6 +1,3 @@
-//size definition
-#define EPOCH 40
-#define MINI_BATCH_SIZE 100
 #define LEARNING_RATE 0.8
 #define REPORT_F "./result/dump"
 

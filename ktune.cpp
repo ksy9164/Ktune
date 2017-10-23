@@ -3,10 +3,12 @@
 #include<iostream>
 #include"mkl.h"
 #include"timeutils.h"
-#include"network_definition.h"
+//#include"network_definition.h"
+#include"net.h"
 #include"mnist.h"
 #include"cifar.h"
-#include"machinelearning_function.h"
+#include"machine.h"
+//#include"machinelearning_function.h"
 using namespace std;
 
 class Sequential

@@ -378,3 +378,419 @@ feedforward : 2.99452 sec
 back_pass : 0.412436 sec
 backpropagation : 1.587772 sec
 total : 4.99660 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.100000
+recognization rate : 8011/10000
+=======================THREADS======================
+feedforward thread : 64
+back_pass thread1 : 64
+back_pass thread2 : 64
+backpropagation thread1 : 64
+backpropagation thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+back_pass mode : OpenMP
+backpropagation mode : MKL
+========================TIME========================
+feedforward : 3.865526 sec
+back_pass : 1.290986 sec
+backpropagation : 3.106894 sec
+total : 8.263406 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.100000
+recognization rate : 2587/10000
+=======================THREADS======================
+feedforward thread : 64
+back_pass thread1 : 64
+back_pass thread2 : 64
+backpropagation thread1 : 64
+backpropagation thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+back_pass mode : OpenMP
+backpropagation mode : MKL
+========================TIME========================
+feedforward : 2.615164 sec
+back_pass : 1.35632 sec
+backpropagation : 2.454881 sec
+total : 6.105677 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.100000
+recognization rate : 1438/10000
+=======================THREADS======================
+feedforward thread : 64
+back_pass thread1 : 64
+back_pass thread2 : 64
+backpropagation thread1 : 64
+backpropagation thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+back_pass mode : OpenMP
+backpropagation mode : MKL
+========================TIME========================
+feedforward : 9.385674 sec
+back_pass : 0.600994 sec
+backpropagation : 7.913707 sec
+total : 17.900375 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.100000
+recognization rate : 1192/10000
+=======================THREADS======================
+feedforward thread : 64
+back_pass thread1 : 64
+back_pass thread2 : 64
+backpropagation thread1 : 64
+backpropagation thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+back_pass mode : OpenMP
+backpropagation mode : MKL
+========================TIME========================
+feedforward : 7.307352 sec
+back_pass : 0.426572 sec
+backpropagation : 7.316106 sec
+total : 15.50030 sec
+
+=======================REPORT=======================
+epoch : 1
+learning_rate : 0.100000
+recognization rate : 1310/10000
+=======================THREADS======================
+feedforward thread : 64
+back_pass thread1 : 64
+back_pass thread2 : 64
+backpropagation thread1 : 64
+backpropagation thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+back_pass mode : OpenMP
+backpropagation mode : MKL
+========================TIME========================
+feedforward : 5.522759 sec
+back_pass : 1.334729 sec
+backpropagation : 4.713266 sec
+total : 11.570754 sec
+
+=======================REPORT=======================
+epoch : 1
+learning_rate : 0.100000
+recognization rate : 936/10000
+=======================THREADS======================
+feedforward thread : 64
+back_pass thread1 : 64
+back_pass thread2 : 64
+backpropagation thread1 : 64
+backpropagation thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+back_pass mode : OpenMP
+backpropagation mode : MKL
+========================TIME========================
+feedforward : 3.966627 sec
+back_pass : 1.234775 sec
+backpropagation : 3.683147 sec
+total : 8.884549 sec
+
+=======================REPORT=======================
+epoch : 1
+learning_rate : 0.100000
+recognization rate : 1292/10000
+=======================THREADS======================
+feedforward thread : 64
+back_pass thread1 : 64
+back_pass thread2 : 64
+backpropagation thread1 : 64
+backpropagation thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+back_pass mode : OpenMP
+backpropagation mode : MKL
+========================TIME========================
+feedforward : 1.911892 sec
+back_pass : 0.135598 sec
+backpropagation : 1.551216 sec
+total : 3.598706 sec
+
+=======================REPORT=======================
+epoch : 1
+learning_rate : 0.100000
+recognization rate : 1292/10000
+=======================THREADS======================
+feedforward thread : 64
+back_pass thread1 : 64
+back_pass thread2 : 64
+backpropagation thread1 : 64
+backpropagation thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+back_pass mode : OpenMP
+backpropagation mode : MKL
+========================TIME========================
+feedforward : 1.901353 sec
+back_pass : 0.123819 sec
+backpropagation : 1.568826 sec
+total : 3.593998 sec
+
+=======================REPORT=======================
+epoch : 1
+learning_rate : 0.100000
+recognization rate : 1292/10000
+=======================THREADS======================
+feedforward thread : 64
+back_pass thread1 : 64
+back_pass thread2 : 64
+backpropagation thread1 : 64
+backpropagation thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+back_pass mode : OpenMP
+backpropagation mode : MKL
+========================TIME========================
+feedforward : 1.901469 sec
+back_pass : 0.135028 sec
+backpropagation : 1.556091 sec
+total : 3.592588 sec
+
+=======================REPORT=======================
+epoch : 1
+learning_rate : 0.100000
+recognization rate : 1292/10000
+=======================THREADS======================
+feedforward thread : 64
+back_pass thread1 : 64
+back_pass thread2 : 64
+backpropagation thread1 : 64
+backpropagation thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+back_pass mode : OpenMP
+backpropagation mode : MKL
+========================TIME========================
+feedforward : 1.920347 sec
+back_pass : 0.135318 sec
+backpropagation : 1.574062 sec
+total : 3.629727 sec
+
+=======================REPORT=======================
+epoch : 1
+learning_rate : 0.100000
+recognization rate : 1292/10000
+=======================THREADS======================
+feedforward thread : 64
+back_pass thread1 : 64
+back_pass thread2 : 64
+backpropagation thread1 : 64
+backpropagation thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+back_pass mode : OpenMP
+backpropagation mode : MKL
+========================TIME========================
+feedforward : 1.899418 sec
+back_pass : 0.124614 sec
+backpropagation : 1.558820 sec
+total : 3.582852 sec
+
+=======================REPORT=======================
+epoch : 1
+learning_rate : 0.100000
+recognization rate : 1292/10000
+=======================THREADS======================
+feedforward thread : 64
+back_pass thread1 : 64
+back_pass thread2 : 64
+backpropagation thread1 : 64
+backpropagation thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+back_pass mode : OpenMP
+backpropagation mode : MKL
+========================TIME========================
+feedforward : 1.905763 sec
+back_pass : 0.124053 sec
+backpropagation : 1.581285 sec
+total : 3.611101 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.800000
+recognization rate : 1011/10000
+update_parameters thread1 : 64
+update_parameters thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+feedbackward mode : MKL
+update_parameters mode : MKL
+========================TIME========================
+feedforward : 7.776143 sec
+feedbackward : 4.355753 sec
+update_parameters : 5.975633 sec
+total : 18.107529 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.800000
+recognization rate : 1011/10000
+update_parameters thread1 : 64
+update_parameters thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+feedbackward mode : MKL
+update_parameters mode : MKL
+========================TIME========================
+feedforward : 7.832502 sec
+feedbackward : 4.475043 sec
+update_parameters : 6.492 sec
+total : 18.308037 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.800000
+recognization rate : 997/10000
+update_parameters thread1 : 64
+update_parameters thread2 : 64
+========================MODE========================
+feedforward mode : OpenMP
+feedbackward mode : OpenMP
+update_parameters mode : OpenMP
+========================TIME========================
+feedforward : 35.473042 sec
+feedbackward : 0.557277 sec
+update_parameters : 19.10357 sec
+total : 55.40676 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.800000
+recognization rate : 997/10000
+update_parameters thread1 : 64
+update_parameters thread2 : 64
+========================MODE========================
+feedforward mode : OpenMP
+feedbackward mode : OpenMP
+update_parameters mode : OpenMP
+========================TIME========================
+feedforward : 36.398297 sec
+feedbackward : 0.659683 sec
+update_parameters : 19.534520 sec
+total : 56.592500 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.800000
+recognization rate : 997/10000
+update_parameters thread1 : 64
+update_parameters thread2 : 64
+========================MODE========================
+feedforward mode : OpenMP
+feedbackward mode : OpenMP
+update_parameters mode : OpenMP
+========================TIME========================
+feedforward : 98.180051 sec
+feedbackward : 0.678425 sec
+update_parameters : 3.801240 sec
+total : 102.659716 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.800000
+recognization rate : 9167/10000
+update_parameters thread1 : 64
+update_parameters thread2 : 64
+========================MODE========================
+feedforward mode : OpenMP
+feedbackward mode : OpenMP
+update_parameters mode : OpenMP
+========================TIME========================
+feedforward : 8.218342 sec
+feedbackward : 0.485342 sec
+update_parameters : 4.506600 sec
+total : 13.210284 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.800000
+recognization rate : 9167/10000
+update_parameters thread1 : 64
+update_parameters thread2 : 64
+========================MODE========================
+feedforward mode : MKL
+feedbackward mode : MKL
+update_parameters mode : MKL
+========================TIME========================
+feedforward : 2.571575 sec
+feedbackward : 4.393749 sec
+update_parameters : 1.898006 sec
+total : 8.863330 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.800000
+recognization rate : 1024/10000
+update_parameters thread1 : 16
+update_parameters thread2 : 16
+========================MODE========================
+feedforward mode : MKL
+feedbackward mode : MKL
+update_parameters mode : MKL
+========================TIME========================
+feedforward : 3.113581 sec
+feedbackward : 4.29235 sec
+update_parameters : 1.824287 sec
+total : 8.967103 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.800000
+recognization rate : 1024/10000
+update_parameters thread1 : 16
+update_parameters thread2 : 16
+========================MODE========================
+feedforward mode : MKL
+feedbackward mode : MKL
+update_parameters mode : MKL
+========================TIME========================
+feedforward : 3.75364 sec
+feedbackward : 4.34422 sec
+update_parameters : 1.811240 sec
+total : 8.921026 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.800000
+recognization rate : 9167/10000
+update_parameters thread1 : 16
+update_parameters thread2 : 16
+========================MODE========================
+feedforward mode : MKL
+feedbackward mode : MKL
+update_parameters mode : MKL
+========================TIME========================
+feedforward : 2.793543 sec
+feedbackward : 4.75722 sec
+update_parameters : 1.832495 sec
+total : 8.701760 sec
+
+=======================REPORT=======================
+epoch : 5
+learning_rate : 0.800000
+recognization rate : 9418/10000
+update_parameters thread1 : 16
+update_parameters thread2 : 16
+========================MODE========================
+feedforward mode : MKL
+feedbackward mode : MKL
+update_parameters mode : MKL
+========================TIME========================
+feedforward : 7.896561 sec
+feedbackward : 4.273140 sec
+update_parameters : 3.84295 sec
+total : 15.253996 sec
