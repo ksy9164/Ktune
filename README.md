@@ -1,10 +1,19 @@
 # KTUNE
   
-### #
+#### KTUNE is machine learning wrapper for ManyCore CPU which motivated by Keras
   
-KTUNE is machine learning wrapper for ManyCore CPU which motivated by Keras
   
 ------------------------------------
+# How to Optimize
+  
+1. OpenMP
+* We use OpenMP for using Multithreading.
+2. MKL library
+* We also use Math Kernel Library given by Intel
+3. Find an optimized number of threads.
+* We developed an algorithm for find optimized number of threads.
+-----------------------
+  
 # Compile
   
 ````
@@ -65,14 +74,14 @@ example : .fit(5,100,0.8)
   
 ````
 -------------------------------------------
-# requirement
+# Requirement
   
 ##### Intel C++ Compile ( icc )
   
 ##### MKL library
   
   
-Our Execution environment is intelÂ® Xeon Phiâ„¢ Processor 7210 (16GB, 1.30 GHz, 64 core)
+Our Execution environment is intel¢ç Xeon Phi¢â Processor 7210 (16GB, 1.30 GHz, 64 core)
   
 -----------------------------------------------
 # Paper
